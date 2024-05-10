@@ -19,5 +19,9 @@ COPY . .
 # Expose port 5000
 EXPOSE 5000
 
+ENV HF_TOKEN =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
+ENV GOOGLE_API_KEY=AIzaSyBSyiQb__USFqTXPcgzMNI8q-6LhDXw7MI
+ENV MONGO_URI=mongodb+srv://nhathaodev:DayLaMatKhau@google-gema.h83d4d1.mongodb.net/
+
 # Command to run the Flask application
 CMD ["python", "app/app.py"]

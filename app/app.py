@@ -15,7 +15,7 @@ def chatbot():
         return jsonify({"response": "Invalid query. Please provide a valid query."})
 
     # Generate search results based on the user query
-    search_result, ids = get_search_result("Python programming")
+    search_result, ids = get_search_result(query)
 
     # Execute the LLMChain to generate response
     result = promt_chain.run(query=query, source_information=search_result)
@@ -24,4 +24,4 @@ def chatbot():
 
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(port=5000, host="0.0.0.0", debug=True)

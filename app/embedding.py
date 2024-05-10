@@ -19,6 +19,6 @@ def get_embedding(text: str) -> list[float]:
         return []
 
     # Encode text to obtain embedding
-    embedding = embedding_model.encode(text, device="cuda", show_progress_bar=True, batch_size=64)
+    embedding = embedding_model.encode(text, show_progress_bar=True, batch_size=64)
 
     return embedding.tolist()
