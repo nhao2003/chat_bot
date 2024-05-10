@@ -66,7 +66,7 @@ def vector_search(user_query):
 
     project_stage = {
         "$project": {
-            "_id": 0,  # Exclude the _id field
+            "_id": 1,
             "title": 1,  # Include the title field
             "description": 1,  # Include the description field
             "average_rating": 1,  # Include the average_rating field
@@ -98,7 +98,10 @@ def get_search_result(query):
     knowledge = vector_search(query)
 
     search_result = ""
+    ids = []
     for result in knowledge:
         search_result += f"Title: {result.get('title', 'N/A')}, Description: {result.get('description', 'N/A')}\n"
+        ids.append(result.get('_id'))
 
-    return search_result
+    return search_result, ids
+
