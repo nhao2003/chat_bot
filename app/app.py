@@ -1,6 +1,6 @@
 from flask import Flask, jsonify, request
 from database import get_search_result
-from ai import promt_chain
+from ai import generate_response
 
 # Initialize Flask app
 app = Flask(__name__)
@@ -18,9 +18,12 @@ def chatbot():
     search_result, ids = get_search_result(query)
 
     # Execute the LLMChain to generate response
-    result = promt_chain.run(query=query, source_information=search_result)
-    return jsonify({"response": result,
+    try:
+        result = generate_response(query, search_result)
+        return jsonify({"response": result,
                     "ids": ids,})
+    except Exception as e:
+        return jsonify({"response": "An error occurred while generating response. Please try again.", ids: []})
 
 
 if __name__ == '__main__':

@@ -1,7 +1,7 @@
 from sentence_transformers import SentenceTransformer
 
 # Initialize Sentence Transformer model for text embedding
-embedding_model = SentenceTransformer("thenlper/gte-large")
+embedding_model = SentenceTransformer("thenlper/gte-large", cache_folder="cache")
 
 
 def get_embedding(text: str) -> list[float]:
