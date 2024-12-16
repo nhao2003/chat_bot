@@ -1,5 +1,6 @@
-from sentence_transformers import SentenceTransformer
 import os
+from sentence_transformers import SentenceTransformer
+import google.generativeai as genai
 if not os.path.exists("./.cache"):
     raise FileNotFoundError("Cache folder not found. Run 'python -m app.cache' to generate cache.")
 
@@ -20,8 +21,14 @@ def get_embedding(text: str) -> list[float]:
     if not text.strip():
         print("Attempted to get embedding for empty text.")
         return []
+    
+    return embedding_model.encode(text).tolist()
 
-    # Encode text to obtain embedding
-    embedding = embedding_model.encode(text, show_progress_bar=True, batch_size=64)
+    # genai.configure(api_key="AIzaSyC2QatxVEu6O_J0vynLVgODEhPCGRI1mig")
 
-    return embedding.tolist()
+    # result = genai.embed_content(
+    #     model="models/text-embedding-004",
+    #     content=text
+    # )
+    
+    # return result['embedding']

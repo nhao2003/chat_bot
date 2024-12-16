@@ -58,15 +58,21 @@ def vector_search(user_query):
                 "exact": True,
                 "limit": 5
             }
-        }, 
+        },
         {
             "$addFields": {  # Thêm trường "score" vào kết quả hiện có
                 "score": {
                     "$meta": "vectorSearchScore"
                 }
             }
+        },
+        {
+            "$project": {  # Loại bỏ trường "embedding" khỏi kết quả
+                "embedding": 0
+            }
         }
     ]
+
 
 
     # Execute the search
@@ -88,6 +94,10 @@ def get_search_result(query):
     # Perform vector search
     knowledge = vector_search(query)
 
-    search_result = ""
-    return search_result, ids
+    # Format search results
+    
+    if not knowledge:
+        return "No relevant books were found."
+    else:
+        return knowledge
 
