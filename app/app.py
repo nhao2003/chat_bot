@@ -21,9 +21,13 @@ def chatbot():
     try:
         result = generate_response(query, search_result)
         return jsonify({"response": result,
-                    "ids": ids,})
+                    "result": search_result,})
     except Exception as e:
         return jsonify({"response": "An error occurred while generating response. Please try again.", ids: []})
+
+@app.route('/')
+def index():
+    return "Welcome to the AI Chatbot API!"
 
 
 if __name__ == '__main__':

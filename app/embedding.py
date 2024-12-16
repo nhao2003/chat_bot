@@ -1,7 +1,10 @@
 from sentence_transformers import SentenceTransformer
+import os
+if not os.path.exists("./.cache"):
+    raise FileNotFoundError("Cache folder not found. Run 'python -m app.cache' to generate cache.")
 
 # Initialize Sentence Transformer model for text embedding
-embedding_model = SentenceTransformer("thenlper/gte-small", cache_folder="cache")
+embedding_model = SentenceTransformer("dangvantuan/vietnamese-embedding", cache_folder="./.cache")
 
 
 def get_embedding(text: str) -> list[float]:

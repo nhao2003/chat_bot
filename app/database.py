@@ -28,8 +28,8 @@ def get_mongo_client(mongo_uri):
 mongo_client = get_mongo_client(MONGO_URI)
 
 # MongoDB database and collection
-db = mongo_client['gemma']
-collection = db['books']
+db = mongo_client["iconic"]
+collection = db["products"]
 
 
 def vector_search(user_query):
@@ -49,34 +49,25 @@ def vector_search(user_query):
     if query_embedding is None:
         return "Invalid query or embedding generation failed."
 
-    # Define the MongoDB aggregation pipeline for vector search
-    vector_search_stage = {
-        "$vectorSearch": {
-            "index": "vector_index",
-            "queryVector": query_embedding,
-            "path": "embedding",
-            "numCandidates": 150,  # Number of candidate matches to consider
-            "limit": 4  # Return top 4 matches
-        }
-    }
-
-    unset_stage = {
-        "$unset": "embedding"  # Exclude the 'embedding' field from the results
-    }
-
-    project_stage = {
-        "$project": {
-            "_id": 1,
-            "title": 1,  # Include the title field
-            "description": 1,  # Include the description field
-            "average_rating": 1,  # Include the average_rating field
-            "score": {
-                "$meta": "vectorSearchScore"  # Include the search score
+    pipeline = [
+        {
+            "$vectorSearch": {
+                "index": "vector_index",
+                "queryVector": query_embedding,
+                "path": "embedding",
+                "exact": True,
+                "limit": 5
+            }
+        }, 
+        {
+            "$addFields": {  # Thêm trường "score" vào kết quả hiện có
+                "score": {
+                    "$meta": "vectorSearchScore"
+                }
             }
         }
-    }
+    ]
 
-    pipeline = [vector_search_stage, unset_stage, project_stage]
 
     # Execute the search
     results = collection.aggregate(pipeline)
@@ -98,10 +89,5 @@ def get_search_result(query):
     knowledge = vector_search(query)
 
     search_result = ""
-    ids = []
-    for result in knowledge:
-        search_result += f"Title: {result.get('title', 'N/A')}, Description: {result.get('description', 'N/A')}\n"
-        ids.append(result.get('_id'))
-
     return search_result, ids
 
